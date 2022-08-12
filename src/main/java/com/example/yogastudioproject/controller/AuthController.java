@@ -1,7 +1,6 @@
 package com.example.yogastudioproject.controller;
 
 import com.example.yogastudioproject.domain.model.AppUser;
-import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.domain.payload.request.LoginRequest;
 import com.example.yogastudioproject.domain.payload.request.SignupRequest;
 import com.example.yogastudioproject.domain.payload.response.JWTSuccessResponse;
@@ -9,7 +8,6 @@ import com.example.yogastudioproject.security.JWTTokenProvider;
 import com.example.yogastudioproject.security.SecurityConstants;
 import com.example.yogastudioproject.service.AppUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "/api/auth")
