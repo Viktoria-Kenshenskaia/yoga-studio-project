@@ -1,55 +1,83 @@
 package com.example.yogastudioproject.service;
 
 import com.example.yogastudioproject.domain.model.AppUser;
+import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.domain.payload.request.SignupRequest;
+import com.example.yogastudioproject.domain.payload.request.SignupRequestCompany;
 import com.example.yogastudioproject.repository.AppUserRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AppUserServiceImpl implements AppUserService {
+public class AppUserServiceImpl {
     private final AppUserRepo appUserRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
+
     public AppUser createUser(AppUser appUser){
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
         return appUserRepo.save(appUser);
     }
 
-    public AppUser createUserFromSignupRequest(SignupRequest signupRequest) {
+//    public AppUser createUserFromSignupRequestAdmin(SignupRequest signupRequest) {
+//        Set<Role> roles = new HashSet<>();
+//        roles.add(roleRepo.findRoleByName("ROLE_ADMIN"));
+//        AppUser appUser = createUserFromSignupRequest(signupRequest, roles);
+//
+//        return appUserRepo.save(appUser);
+//    }
+
+    private AppUser createUserFromSignupRequest(SignupRequest signupRequest, Set<Role> roles) {
         AppUser appUser = new AppUser();
-        appUser.setName(signupRequest.getName());
+        appUser.setFirstname(signupRequest.getName());
         appUser.setEmail(signupRequest.getEmail());
         appUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        appUser.getRoles().add(roleRepo.findRoleByName("ROLE_MANAGER"));
+        roles.forEach(role -> appUser.getRoles().add(role));
 
+        return appUser;
+    }
+
+    public AppUser createEmployeeFromSignupRequest(SignupRequest signupRequest) {
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepo.findRoleByName("ROLE_MANAGER"));
+        AppUser appUser = createUserFromSignupRequest(signupRequest, roles);
 
         return appUserRepo.save(appUser);
     }
 
-    @Override
+    public AppUser createUserFromSignupRequestCompany(SignupRequestCompany signupRequestCompany) {
+        Company company = new Company();
+        company.setCompanyName(signupRequestCompany.getCompanyName());
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepo.findRoleByName("ROLE_ADMIN"));
+        AppUser appUser = createUserFromSignupRequest(signupRequestCompany, roles);
+        appUser.setCompany(company);
+
+        return appUserRepo.save(appUser);
+    }
+
+
     public Role saveRole(Role role) {
         return roleRepo.save(role);
     }
-    @Override
+
     public List<AppUser> getAllUsers() {
         return appUserRepo.findAll();
     }
 
-    @Override
+
     public void addRoleToUser(String email, String roleName) {
         AppUser appUser = getAppUserByEmail(email);
         Role role = roleRepo.findRoleByName(roleName);
@@ -57,7 +85,7 @@ public class AppUserServiceImpl implements AppUserService {
         appUserRepo.save(appUser);
     }
 
-    @Override
+
     public AppUser getAppUserByEmail(String email) {
         return appUserRepo.findAppUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

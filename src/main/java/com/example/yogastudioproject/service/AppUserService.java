@@ -14,5 +14,7 @@ public interface AppUserService {
     AppUser getAppUserByEmail(String email);
     List<AppUser> getAllUsers();
 
-    AppUser createUserFromSignupRequest(SignupRequest signupRequest);
+//    AppUser createUserFromSignupRequest(SignupRequest signupRequest);
+
+    AppUser createEmployeeFromSignupRequest(SignupRequest signupRequest);
 }
