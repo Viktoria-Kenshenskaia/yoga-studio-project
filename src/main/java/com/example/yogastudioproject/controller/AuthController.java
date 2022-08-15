@@ -8,7 +8,6 @@ import com.example.yogastudioproject.domain.payload.response.JWTSuccessResponse;
 import com.example.yogastudioproject.security.JWTTokenProvider;
 import com.example.yogastudioproject.security.SecurityConstants;
 import com.example.yogastudioproject.service.AppUserService;
-import com.example.yogastudioproject.service.AppUserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +30,7 @@ import javax.validation.Valid;
 public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final AppUserServiceImpl userService;
+    private final AppUserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult) {
@@ -49,11 +48,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Object> registrationUser(@Valid @RequestBody SignupRequestCompany signupRequestCompany) {
         AppUser appUser = userService.createUserFromSignupRequestCompany(signupRequestCompany);
-        return ResponseEntity.ok().body(appUser);
-    }
-    @PostMapping("/signup/employee")
-    public ResponseEntity<AppUser> registrationEmployee(@Valid @RequestBody SignupRequest signupRequest) {
-        AppUser appUser = userService.createEmployeeFromSignupRequest(signupRequest);
         return ResponseEntity.ok().body(appUser);
     }
 

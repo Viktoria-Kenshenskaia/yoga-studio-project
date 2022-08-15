@@ -1,15 +1,12 @@
 package com.example.yogastudioproject.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -45,6 +42,8 @@ public class Company {
 
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Client> clients = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<OneClass> classes = new HashSet<>();
 
 
 

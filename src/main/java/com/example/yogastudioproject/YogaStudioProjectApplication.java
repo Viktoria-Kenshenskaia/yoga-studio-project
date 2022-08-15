@@ -1,17 +1,12 @@
 package com.example.yogastudioproject;
 
 import com.example.yogastudioproject.domain.model.AppUser;
-import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.service.AppUserService;
-import com.example.yogastudioproject.service.AppUserServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +19,7 @@ public class YogaStudioProjectApplication {
     }
 
     @Bean
-    CommandLineRunner run(AppUserServiceImpl userService) {
+    CommandLineRunner run(AppUserService userService) {
         return args -> {
           userService.createUser(new AppUser(null, "mary", "johns", LocalDate.parse("1995-03-12"), "mary@mail.com", "1234", null, new ArrayList<>()));
           userService.createUser(new AppUser(null, "anna", "smith", LocalDate.parse("1990-08-23"),  "anna@mail.com", "1234", null,  new ArrayList<>()));

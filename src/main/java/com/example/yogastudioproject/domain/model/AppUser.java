@@ -13,6 +13,7 @@ import javax.validation.constraints.Email;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "app_user")
@@ -51,7 +52,7 @@ public class AppUser  implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-        return null;
+        return Collections.singletonList(rol);
     }
 
     @Override
