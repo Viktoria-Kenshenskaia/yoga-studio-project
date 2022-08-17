@@ -1,8 +1,11 @@
 package com.example.yogastudioproject;
 
 import com.example.yogastudioproject.domain.model.AppUser;
+import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Role;
+import com.example.yogastudioproject.dto.CompanyDto;
 import com.example.yogastudioproject.service.AppUserService;
+import com.example.yogastudioproject.service.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +27,7 @@ public class YogaStudioProjectApplication {
     }
 
     @Bean
-    CommandLineRunner run(AppUserService userService) {
+    CommandLineRunner run(AppUserService userService, CompanyService companyService) {
         return args -> {
           userService.createUser(new AppUser(null, "mary", "johns", LocalDate.parse("1995-03-12"), "mary@mail.com", "1234", null, new ArrayList<>()));
           userService.createUser(new AppUser(null, "anna", "smith", LocalDate.parse("1990-08-23"),  "anna@mail.com", "1234", null,  new ArrayList<>()));
@@ -35,11 +38,15 @@ public class YogaStudioProjectApplication {
           userService.saveRole(new Role(null, "ROLE_MANAGER"));
           userService.saveRole(new Role(null, "ROLE_TEACHER"));
 
+          companyService.createCompany(new CompanyDto("FirstStudio"));
+
           userService.addRoleToUser("mary@mail.com", "ROLE_ADMIN");
           userService.addRoleToUser("mary@mail.com", "ROLE_MANAGER");
           userService.addRoleToUser("anna@mail.com", "ROLE_MANAGER");
           userService.addRoleToUser("johan@mail.com", "ROLE_TEACHER");
           userService.addRoleToUser("albert@mail.com", "ROLE_TEACHER");
+
+
 
         };
     }

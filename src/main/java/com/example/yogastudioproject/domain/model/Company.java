@@ -26,11 +26,11 @@ public class Company {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "contacts_id")
     private Contacts contacts;
 
@@ -50,6 +50,10 @@ public class Company {
     @PrePersist
     private void createDate() {
         this.createdDate = LocalDateTime.now();
+        this.contacts = new Contacts();
+        this.address = new Address();
     }
+
+
 
 }

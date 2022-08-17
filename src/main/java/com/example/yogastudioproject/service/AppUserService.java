@@ -1,8 +1,6 @@
 package com.example.yogastudioproject.service;
 
-import com.example.yogastudioproject.domain.model.AppUser;
-import com.example.yogastudioproject.domain.model.Company;
-import com.example.yogastudioproject.domain.model.Role;
+import com.example.yogastudioproject.domain.model.*;
 import com.example.yogastudioproject.domain.payload.request.SignupRequest;
 import com.example.yogastudioproject.domain.payload.request.SignupRequestCompany;
 import com.example.yogastudioproject.repository.AppUserRepo;
@@ -60,6 +58,7 @@ public class AppUserService {
     public AppUser createUserFromSignupRequestCompany(SignupRequestCompany signupRequestCompany) {
         Company company = new Company();
         company.setCompanyName(signupRequestCompany.getCompanyName());
+
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepo.findRoleByName("ROLE_ADMIN"));
         AppUser appUser = createUserFromSignupRequest(signupRequestCompany, roles);
