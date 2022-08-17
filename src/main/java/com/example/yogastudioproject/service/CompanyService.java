@@ -21,7 +21,8 @@ public class CompanyService {
     public Company createCompany(CompanyDto companyDto) {
         return companyRepo.save(companyDtoToCompany(companyDto));
     }
-    public Company updateCompany(Company companyUpdate, Long companyId) {
+    public Company updateCompany(CompanyDto companyUpdateDto, Long companyId) {
+        Company companyUpdate = companyDtoToCompany(companyUpdateDto);
         companyUpdate.setCompanyId(companyId);
         return companyRepo.save(companyUpdate);
     }

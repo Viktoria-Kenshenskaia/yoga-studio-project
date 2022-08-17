@@ -1,8 +1,8 @@
 package com.example.yogastudioproject;
 
 import com.example.yogastudioproject.domain.model.AppUser;
-import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Role;
+import com.example.yogastudioproject.dto.AddressDto;
 import com.example.yogastudioproject.dto.CompanyDto;
 import com.example.yogastudioproject.service.AppUserService;
 import com.example.yogastudioproject.service.CompanyService;
@@ -37,8 +37,6 @@ public class YogaStudioProjectApplication {
           userService.saveRole(new Role(null, "ROLE_ADMIN"));
           userService.saveRole(new Role(null, "ROLE_MANAGER"));
           userService.saveRole(new Role(null, "ROLE_TEACHER"));
-
-          companyService.createCompany(new CompanyDto("FirstStudio"));
 
           userService.addRoleToUser("mary@mail.com", "ROLE_ADMIN");
           userService.addRoleToUser("mary@mail.com", "ROLE_MANAGER");
