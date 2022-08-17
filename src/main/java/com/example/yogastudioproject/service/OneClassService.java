@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class OneClassService {
     private OneClass oneClassDtoToOneClass(OneClassDto oneClassDto) {
         OneClass oneClass = new OneClass();
         AppUser appUser = appUserRepo.findById(oneClassDto.getTeacherId()).orElseThrow(() -> new UsernameNotFoundException("Teacher not found"));
-        oneClass.setDateOfClass(LocalDateTime.parse(oneClassDto.getDateOfClass()));
+        oneClass.setDateOfClass(LocalDateTime.parse(oneClassDto.getDateOfClass(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         oneClass.setTeacher(appUser);
         return oneClass;
     }
@@ -53,7 +54,7 @@ public class OneClassService {
     }
 
     public List<OneClass> getAllClassesForTeacherById(Long teacherId) {
-        return oneClassRepo.findAllByTeacher(appUserRepo.getReferenceById(teacherId));
+        return oneClassRepo.findAllByTeacher(appUserRepo.findById(teacherId).get());
     }
 
     public List<OneClass> getAllClassesFromTo(Principal principal, LocalDateTime from, LocalDateTime to) {

@@ -3,6 +3,7 @@ package com.example.yogastudioproject;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.service.AppUserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +17,10 @@ public class YogaStudioProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(YogaStudioProjectApplication.class, args);
+    }
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Bean

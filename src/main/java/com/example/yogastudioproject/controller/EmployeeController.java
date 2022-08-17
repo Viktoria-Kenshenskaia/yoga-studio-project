@@ -9,13 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-@PreAuthorize("permitAll()")
 public class EmployeeController {
     private final AppUserService userService;
 
@@ -25,7 +25,9 @@ public class EmployeeController {
         return ResponseEntity.ok().body(appUser);
     }
     @GetMapping("/all")
+    @RolesAllowed("ADMIN")
     public ResponseEntity<List<AppUser>> getAllUsers() {
+
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 

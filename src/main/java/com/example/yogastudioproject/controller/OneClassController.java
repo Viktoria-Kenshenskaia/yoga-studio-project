@@ -13,11 +13,12 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/class")
 @RequiredArgsConstructor
-@RolesAllowed({"ROLE_ADMIN"})
+@RolesAllowed({"ROLE_ADMIN", "ROLE_MANAGER"})
 public class OneClassController {
     private final OneClassService classService;
     private final AppUserService userService;
@@ -28,18 +29,19 @@ public class OneClassController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<OneClass> updateClass(@Valid @RequestBody OneClassDto classDto,
-                                                @RequestBody Long classId) {
-        return   ResponseEntity.ok().body(classService.updateClass(classDto, classId));
+    public ResponseEntity<OneClass> updateClass(@Valid @RequestBody Map<String, String> json) {
+        OneClassDto classDto = new OneClassDto(json.get("dateOfClass"), Long.parseLong(json.get("teacherId")));
+
+        return   ResponseEntity.ok().body(classService.updateClass(classDto, Long.parseLong(json.get("classId"))));
     }
 
     @DeleteMapping("/delete")
-    public void deleteClass(@RequestBody Long classId) {
+    public void deleteClass(@RequestBody Map<String, Long> json) {
 
-        classService.deleteClassById(classId);
+        classService.deleteClassById(json.get("classId"));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all")                                                         // Problem with company
     public ResponseEntity<List<OneClass>> getAllClasses(Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClasses(principal));
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -26,6 +27,7 @@ public class Client {
 
     @Email
     @Column(name = "email", unique = true)
+    @UniqueElements
     private String email;
 
     @Column(name = "firstname")
