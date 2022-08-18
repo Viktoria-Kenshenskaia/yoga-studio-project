@@ -34,7 +34,7 @@ public class Company {
     @JoinColumn(name = "contacts_id")
     private Contacts contacts;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private Set<AppUser> employees = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")

@@ -38,6 +38,8 @@ public class YogaStudioProjectApplication {
           userService.saveRole(new Role(null, "ROLE_MANAGER"));
           userService.saveRole(new Role(null, "ROLE_TEACHER"));
 
+
+
           userService.addRoleToUser("mary@mail.com", "ROLE_ADMIN");
           userService.addRoleToUser("mary@mail.com", "ROLE_MANAGER");
           userService.addRoleToUser("anna@mail.com", "ROLE_MANAGER");

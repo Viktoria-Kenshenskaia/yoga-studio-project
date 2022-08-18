@@ -1,18 +1,23 @@
 package com.example.yogastudioproject.dto;
 
+import com.example.yogastudioproject.domain.model.Role;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Set;
 
 @Data
 public class AppUserDto implements Serializable {
-    private final Long userId;
-    private final String firstname;
-    private final String lastname;
-    private final LocalDate dateOfBirth;
+    private Long userId;
+    private String firstname;
+    private String lastname;
+    private LocalDate dateOfBirth;
     @Email
-    private final String email;
-    private final String password;
+    private String email;
+    private String password;
+    private Collection<RoleDto> roles;
 }

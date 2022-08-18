@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 @PasswordMatches
 public class SignupRequest {
     @NotEmpty(message = "Please enter your name")
-    private String name;
+    private String firstname;
 
     @Email(message = "It should have email format")
     @NotBlank(message = "User email is required")

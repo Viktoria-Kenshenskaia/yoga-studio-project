@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +23,16 @@ public class CompanyService {
     public Company createCompany(CompanyDto companyDto) {
         return companyRepo.save(companyDtoToCompany(companyDto));
     }
+
     public Company updateCompany(CompanyDto companyUpdateDto, Long companyId) {
         Company companyUpdate = companyDtoToCompany(companyUpdateDto);
         companyUpdate.setCompanyId(companyId);
         return companyRepo.save(companyUpdate);
     }
 
+    public void deleteCompany(Principal principal) {
+        companyRepo.delete(getCompanyByPrincipal(principal));
+    }
     public Company getCompanyByPrincipal(Principal principal) {
         AppUser appUser = appUserRepo.findAppUserByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
