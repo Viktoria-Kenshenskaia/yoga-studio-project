@@ -71,6 +71,10 @@ public class OneClassService {
 
     public void addSubscriptionToClass(ClassToSubscription classToSubscription) {
         Subscription subscription = subscriptionService.getSubscriptionById(classToSubscription.getSubscriptionId());
+        if (!subscriptionService.isActive(subscription)) {
+            throw  new RuntimeException("Subscription is not active");
+        };
+
         OneClass oneClass = getOneClassById(classToSubscription.getClassId());
         oneClass.getSubscription().add(subscription);
 

@@ -28,9 +28,11 @@ public class SubscriptionService {
         return null;
     }
 
-    public boolean isActive(SubscriptionDto subscriptionDto) {                                                       // Need check time format
+    public boolean isActive(Subscription subscription) {                                                       // Need check time format
         LocalDate now = LocalDate.now(Clock.systemDefaultZone());
-        if (now.isAfter(subscriptionDto.getOpenedAt()) && now.isBefore(subscriptionDto.getFinishedAt())) {
+        if (now.isAfter(subscription.getOpenedAt()) &&
+                now.isBefore(subscription.getFinishedAt()) &&
+                subscription.getNumberOfClasses() > 0) {
             return true;
         } else {
             return false;

@@ -25,9 +25,9 @@ public class SubscriptionController {
         return ResponseEntity.ok().body(null);
     }
 
+@GetMapping
+    public ResponseEntity<Object> getSubscriptionDetails() {
 
-
-
-
+    }
 
 }
