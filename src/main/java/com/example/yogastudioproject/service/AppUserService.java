@@ -128,4 +128,11 @@ public class AppUserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         appUserRepo.delete(appUser);
     }
+
+    public AppUserDto updateUser(AppUserDto appUserDto, Long userId) {
+        AppUser appUser = modelMapper.map(appUserDto, AppUser.class);
+        appUser.setUserId(userId);
+        appUserRepo.save(appUser);
+        return modelMapper.map(appUser, AppUserDto.class);
+    }
 }

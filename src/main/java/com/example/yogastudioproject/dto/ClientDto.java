@@ -11,12 +11,12 @@ import java.time.LocalDate;
 @Data
 public class ClientDto implements Serializable {
     @Email
-    private final String email;
+    private String email;
     @Size(min = 2, max = 30, message = "Firstname should not be less than 2 and not greater than 30 signs")
-    private final String firstname;
+    private String firstname;
     @Size(min = 2, max = 30, message = "Lastname should not be less than 2 and not greater than 30 signs")
-    private final String lastname;
-    private final LocalDate dateOfBirth;
+    private String lastname;
+    private LocalDate dateOfBirth;
     @NotNull
-    private final String phoneNumber;
+    private String phoneNumber;
 }

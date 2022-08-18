@@ -1,6 +1,7 @@
 package com.example.yogastudioproject.controller;
 
 import com.example.yogastudioproject.domain.model.OneClass;
+import com.example.yogastudioproject.dto.ClientDto;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.service.AppUserService;
 import com.example.yogastudioproject.service.OneClassService;
@@ -41,7 +42,7 @@ public class OneClassController {
         classService.deleteClassById(json.get("classId"));
     }
 
-    @GetMapping("/all")                                                         // Problem with company
+    @GetMapping("/all")
     public ResponseEntity<List<OneClass>> getAllClasses(Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClasses(principal));
     }
@@ -56,6 +57,10 @@ public class OneClassController {
                                                        @PathVariable("to") LocalDateTime to,
                                                        Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClassesFromTo(principal, from, to));
+    }
+    @PostMapping("/add-too-class")
+    public void addClientToClass(@RequestBody ClientDto clientDto) {
+        classService.addClientToCLass(clientDto);
     }
 
 }

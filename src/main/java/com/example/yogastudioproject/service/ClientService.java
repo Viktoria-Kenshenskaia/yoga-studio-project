@@ -7,6 +7,7 @@ import com.example.yogastudioproject.repository.ClientRepo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -39,5 +40,12 @@ public class ClientService {
     public void deleteClient(Long clientId) {
         Client client = clientRepo.findById(clientId).orElse(null);
         clientRepo.delete(client);
+    }
+
+    public ClientDto getClient(Long clientId) {
+        Client client = clientRepo.findById(clientId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return modelMapper.map(client, ClientDto.class);
+
     }
 }

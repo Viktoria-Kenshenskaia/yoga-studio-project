@@ -18,14 +18,19 @@ import java.security.Principal;
 public class ClientController {
     private final ClientService clientService;
 
+    @GetMapping("/{clientId}")
+    public ResponseEntity<ClientDto> getClientDetails(@PathVariable("clientId") Long clientId) {
+        return ResponseEntity.ok().body(clientService.getClient(clientId));
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<Client> createUser(@Valid @RequestBody ClientDto clientDTO,
+    public ResponseEntity<Client> createClient(@Valid @RequestBody ClientDto clientDTO,
                                              Principal principal) {
         return ResponseEntity.ok().body(clientService.createClient(clientDTO, principal));
     }
 
     @PostMapping("/{id}/update")
-    public ResponseEntity<Client> updateUser(@Valid @RequestBody ClientDto clientDto,
+    public ResponseEntity<Client> updateClient(@Valid @RequestBody ClientDto clientDto,
                                               @PathVariable("id") Long clientId) {
         return ResponseEntity.ok().body(clientService.updateClient(clientDto, clientId));
     }

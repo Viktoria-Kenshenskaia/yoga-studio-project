@@ -1,9 +1,12 @@
 package com.example.yogastudioproject.service;
 
 import com.example.yogastudioproject.domain.model.AppUser;
+import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.OneClass;
+import com.example.yogastudioproject.dto.ClientDto;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.repository.AppUserRepo;
+import com.example.yogastudioproject.repository.CompanyRepo;
 import com.example.yogastudioproject.repository.OneClassRepo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,7 @@ import java.util.List;
 public class OneClassService {
     private final OneClassRepo oneClassRepo;
     private final AppUserRepo appUserRepo;
-//    private final CompanyRepo companyRepo;
+    private final CompanyService companyService;
 
     public OneClass createClass(OneClassDto classDto) {
         return oneClassRepo.save(oneClassDtoToOneClass(classDto));
@@ -48,9 +51,8 @@ public class OneClassService {
     }
 
     public List<OneClass> getAllClasses(Principal principal) {
-        AppUser appUser
-                = appUserRepo.findAppUserByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return  oneClassRepo.findAllByCompany(appUser.getCompany());
+        Company company = companyService.getCompanyByPrincipal(principal);
+        return  oneClassRepo.findAllByCompany(company);
     }
 
     public List<OneClass> getAllClassesForTeacherById(Long teacherId) {
@@ -62,5 +64,8 @@ public class OneClassService {
                 = appUserRepo.findAppUserByEmail(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return oneClassRepo.findAllByCompanyAndDateOfClassBeforeAndDateOfClassAfter(appUser.getCompany(), from, to);
 
+    }
+
+    public void addClientToCLass(ClientDto clientDto) {
     }
 }

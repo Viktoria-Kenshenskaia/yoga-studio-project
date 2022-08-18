@@ -33,6 +33,13 @@ public class EmployeeController {
         return ResponseEntity.ok().body(modelMapper.map(appUser, AppUserDto.class));
     }
 
+    @PatchMapping("/{userId}/update")
+    public ResponseEntity<AppUserDto> updateEmployee(@RequestBody AppUserDto appUserDto,
+                                                     @PathVariable("userId") Long userId) {
+        AppUserDto user = userService.updateUser(appUserDto, userId);
+        return ResponseEntity.ok().body(user);
+    }
+
     @DeleteMapping("/{userId}/delete")
     public void deleteEmployee(@PathVariable("userId") Long userId) {
         userService.deleteUserById(userId);
