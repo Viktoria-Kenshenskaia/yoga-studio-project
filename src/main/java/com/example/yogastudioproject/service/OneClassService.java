@@ -3,12 +3,11 @@ package com.example.yogastudioproject.service;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.OneClass;
-import com.example.yogastudioproject.dto.ClientDto;
+import com.example.yogastudioproject.domain.model.Subscription;
+import com.example.yogastudioproject.domain.payload.request.ClassToSubscription;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.repository.AppUserRepo;
-import com.example.yogastudioproject.repository.CompanyRepo;
 import com.example.yogastudioproject.repository.OneClassRepo;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -26,6 +25,7 @@ public class OneClassService {
     private final OneClassRepo oneClassRepo;
     private final AppUserRepo appUserRepo;
     private final CompanyService companyService;
+    private final SubscriptionService subscriptionService;
 
     public OneClass createClass(OneClassDto classDto) {
         return oneClassRepo.save(oneClassDtoToOneClass(classDto));
@@ -65,7 +65,24 @@ public class OneClassService {
         return oneClassRepo.findAllByCompanyAndDateOfClassBeforeAndDateOfClassAfter(appUser.getCompany(), from, to);
 
     }
-
-    public void addClientToCLass(ClientDto clientDto) {
+    public OneClass getOneClassById(Long classId) {
+        return oneClassRepo.findById(classId).orElseThrow(() -> new RuntimeException("Class not found"));
     }
+
+    public void addSubscriptionToClass(ClassToSubscription classToSubscription) {
+        Subscription subscription = subscriptionService.getSubscriptionById(classToSubscription.getSubscriptionId());
+        OneClass oneClass = getOneClassById(classToSubscription.getClassId());
+        oneClass.getSubscription().add(subscription);
+
+        oneClassRepo.save(oneClass);
+    }
+
+    public void removeSubscriptionFromClass(ClassToSubscription classToSubscription) {
+        Subscription subscription = subscriptionService.getSubscriptionById(classToSubscription.getSubscriptionId());
+        OneClass oneClass = getOneClassById(classToSubscription.getClassId());
+        oneClass.getSubscription().remove(subscription);
+
+        oneClassRepo.save(oneClass);
+    }
+
 }

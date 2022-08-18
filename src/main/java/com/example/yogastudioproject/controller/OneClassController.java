@@ -1,7 +1,7 @@
 package com.example.yogastudioproject.controller;
 
 import com.example.yogastudioproject.domain.model.OneClass;
-import com.example.yogastudioproject.dto.ClientDto;
+import com.example.yogastudioproject.domain.payload.request.ClassToSubscription;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.service.AppUserService;
 import com.example.yogastudioproject.service.OneClassService;
@@ -58,9 +58,14 @@ public class OneClassController {
                                                        Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClassesFromTo(principal, from, to));
     }
-    @PostMapping("/add-too-class")
-    public void addClientToClass(@RequestBody ClientDto clientDto) {
-        classService.addClientToCLass(clientDto);
+    @PostMapping("/add-to-class")
+    public void addClientToClass(@RequestBody ClassToSubscription classToSubscription) {
+        classService.addSubscriptionToClass(classToSubscription);
+    }
+
+    @PostMapping("/remove-from-class")
+    public void removeClientFromClass(@RequestBody ClassToSubscription classToSubscription) {
+        classService.removeSubscriptionFromClass(classToSubscription);
     }
 
 }

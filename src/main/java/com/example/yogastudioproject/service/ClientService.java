@@ -48,4 +48,10 @@ public class ClientService {
         return modelMapper.map(client, ClientDto.class);
 
     }
+
+    public Client finClientById(Long clientId) {
+        return clientRepo.findById(clientId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    }
 }
