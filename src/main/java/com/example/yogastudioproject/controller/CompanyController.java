@@ -6,6 +6,7 @@ import com.example.yogastudioproject.dto.CompanyDto;
 import com.example.yogastudioproject.service.AppUserService;
 import com.example.yogastudioproject.service.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +19,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompanyController {
     private final CompanyService companyService;
-
+    private final ModelMapper modelMapper;
     private final AppUserService userService;
 
-    @PostMapping("/{companyId}/update")
+
+    @GetMapping("/details")
+    public ResponseEntity<CompanyDto> detailsCompany(Principal principal) {
+        Company company = companyService.getCompanyByPrincipal(principal);
+        return ResponseEntity.ok().body(modelMapper.map(company, CompanyDto.class));
+    }
+
+    @PostMapping("/update")
     @RolesAllowed({"ROLE_ADMIN"})
-    public ResponseEntity<Company> updateCompany(@RequestBody CompanyDto companyDto,
-                                                    @PathVariable("companyId") Long companyId) {
-        return ResponseEntity.ok().body(companyService.updateCompany(companyDto, companyId));
+    public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto companyDto,
+                                                    Principal principal) {
+        Company companyUpdate = modelMapper.map(companyDto, Company.class);
+        companyService.updateCompany(companyUpdate, principal);
+        return ResponseEntity.ok().body(modelMapper.map(companyUpdate, CompanyDto.class));
     }
 
     @DeleteMapping("/delete")

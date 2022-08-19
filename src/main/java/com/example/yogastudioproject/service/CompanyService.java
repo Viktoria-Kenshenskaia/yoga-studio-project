@@ -18,15 +18,10 @@ import java.util.List;
 public class CompanyService {
     private final CompanyRepo companyRepo;
     private final AppUserRepo appUserRepo;
-    private final ModelMapper modelMapper;
 
-    public Company createCompany(CompanyDto companyDto) {
-        return companyRepo.save(companyDtoToCompany(companyDto));
-    }
-
-    public Company updateCompany(CompanyDto companyUpdateDto, Long companyId) {
-        Company companyUpdate = companyDtoToCompany(companyUpdateDto);
-        companyUpdate.setCompanyId(companyId);
+    public Company updateCompany(Company companyUpdate, Principal principal) {
+        Company company = getCompanyByPrincipal(principal);
+        companyUpdate.setCompanyId(company.getCompanyId());
         return companyRepo.save(companyUpdate);
     }
 
@@ -37,9 +32,5 @@ public class CompanyService {
         AppUser appUser = appUserRepo.findAppUserByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         return appUser.getCompany();
-    }
-
-    private Company companyDtoToCompany(CompanyDto companyDto) {
-        return modelMapper.map(companyDto, Company.class);
     }
 }
