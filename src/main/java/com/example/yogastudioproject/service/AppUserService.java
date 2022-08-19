@@ -74,12 +74,17 @@ public class AppUserService {
     }
 
     public AppUser createUserFromSignupRequestCompany(SignupRequestCompany signupRequestCompany) {
-        Company company = new Company();
-        company.setCompanyName(signupRequestCompany.getCompanyName());
+        Company company = companyService.createCompany(signupRequestCompany.getCompanyName());
+
+        Contacts userContacts = new Contacts();
+        userContacts.setCompany(company);
+
+
 
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepo.findRoleByName("ROLE_ADMIN"));
         AppUser appUser = createUserFromSignupRequest(signupRequestCompany, roles);
+        appUser.setContacts(userContacts);
         appUser.setCompany(company);
 
         return appUserRepo.save(appUser);

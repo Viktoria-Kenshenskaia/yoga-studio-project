@@ -1,7 +1,9 @@
 package com.example.yogastudioproject.service;
 
+import com.example.yogastudioproject.domain.model.Address;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
+import com.example.yogastudioproject.domain.model.Contacts;
 import com.example.yogastudioproject.dto.CompanyDto;
 import com.example.yogastudioproject.repository.AppUserRepo;
 import com.example.yogastudioproject.repository.CompanyRepo;
@@ -32,5 +34,20 @@ public class CompanyService {
         AppUser appUser = appUserRepo.findAppUserByEmail(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         return appUser.getCompany();
+    }
+
+    public Company createCompany(String companyName) {
+        Company company = new Company();
+        Address address = new Address();
+        Contacts contacts = new Contacts();
+
+        address.setCompany(company);
+        contacts.setCompany(company);
+
+        company.setCompanyName(companyName);
+        company.setAddress(address);
+        company.setContacts(contacts);
+
+        return company;
     }
 }

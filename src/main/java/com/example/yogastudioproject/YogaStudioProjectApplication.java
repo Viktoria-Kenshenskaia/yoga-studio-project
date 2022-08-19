@@ -29,10 +29,10 @@ public class YogaStudioProjectApplication {
     @Bean
     CommandLineRunner run(AppUserService userService, CompanyService companyService) {
         return args -> {
-          userService.createUser(new AppUser(null, "mary", "johns", LocalDate.parse("1995-03-12"), "mary@mail.com", "1234", null, new ArrayList<>()));
-          userService.createUser(new AppUser(null, "anna", "smith", LocalDate.parse("1990-08-23"),  "anna@mail.com", "1234", null,  new ArrayList<>()));
-          userService.createUser(new AppUser(null, "johan", "swartz", LocalDate.parse("1987-01-06"), "johan@mail.com", "1234", null,  new ArrayList<>()));
-          userService.createUser(new AppUser(null, "albert", "seuberg", LocalDate.parse("1990-08-30"), "albert@mail.com", "1234",null, new ArrayList<>()));
+          userService.createUser(new AppUser(null, "mary", "johns", LocalDate.parse("1995-03-12"), "mary@mail.com", "1234", null, null, new ArrayList<>()));
+          userService.createUser(new AppUser(null, "anna", "smith", LocalDate.parse("1990-08-23"),  "anna@mail.com", "1234", null, null,  new ArrayList<>()));
+          userService.createUser(new AppUser(null, "johan", "swartz", LocalDate.parse("1987-01-06"), "johan@mail.com", "1234", null, null,  new ArrayList<>()));
+          userService.createUser(new AppUser(null, "albert", "seuberg", LocalDate.parse("1990-08-30"), "albert@mail.com", "1234",null, null, new ArrayList<>()));
 
           userService.saveRole(new Role(null, "ROLE_ADMIN"));
           userService.saveRole(new Role(null, "ROLE_MANAGER"));

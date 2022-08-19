@@ -33,9 +33,8 @@ public class CompanyController {
     @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto companyDto,
                                                     Principal principal) {
-        Company companyUpdate = modelMapper.map(companyDto, Company.class);
-        companyService.updateCompany(companyUpdate, principal);
-        return ResponseEntity.ok().body(modelMapper.map(companyUpdate, CompanyDto.class));
+        Company company = companyService.updateCompany(modelMapper.map(companyDto, Company.class), principal);
+        return ResponseEntity.ok().body(modelMapper.map(company, CompanyDto.class));
     }
 
     @DeleteMapping("/delete")

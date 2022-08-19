@@ -32,14 +32,18 @@ public class AppUser implements UserDetails {
     @Column(name = "date_of_birth")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
     @Email
     @Column(name = "email", unique = true)
     private String email;
     @Column(name = "password")
     private String password;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "company_id")
     private Company company;
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "contacts_id")
+    private Contacts contacts;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

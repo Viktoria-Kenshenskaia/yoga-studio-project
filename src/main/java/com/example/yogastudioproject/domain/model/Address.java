@@ -25,4 +25,8 @@ public class Address {
     @Column(name = "post_code")
     private String postCode;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 }

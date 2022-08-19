@@ -17,8 +17,6 @@ public class Contacts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contacts_id")
     private long contactsId;
-    @Column(name = "email")
-    private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "instagram")
@@ -26,7 +24,7 @@ public class Contacts {
     @Column(name = "telegram")
     private String telegram;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "company_id")
     private Company company;
 }

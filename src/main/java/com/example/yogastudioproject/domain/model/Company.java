@@ -42,16 +42,13 @@ public class Company {
 
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Client> clients = new HashSet<>();
+
     @OneToMany(fetch = FetchType.LAZY)
     private Set<OneClass> classes = new HashSet<>();
-
-
 
     @PrePersist
     private void createDate() {
         this.createdDate = LocalDateTime.now();
-        this.contacts = new Contacts();
-        this.address = new Address();
     }
 
 
