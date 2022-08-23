@@ -10,10 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 @Entity
 @Table(name = "app_user")
@@ -25,8 +26,13 @@ public class AppUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", unique = true)
     private Long userId;
+
+    @NotBlank(message = "Email is required")
+    @Size(min = 1, max = 50, message = "Firstname should be no less 1 and no more 50 signs")
     @Column(name = "firstname")
     private String firstname;
+
+    @Size(min = 1, max = 50, message = "Lastname should be no less 1 and no more 50 signs")
     @Column(name = "lastname")
     private String lastname;
     @Column(name = "date_of_birth")
@@ -34,13 +40,19 @@ public class AppUser implements UserDetails {
     private LocalDate dateOfBirth;
 
     @Email
+    @NotBlank(message = "Email is required")
     @Column(name = "email", unique = true)
     private String email;
+
+    @NotEmpty(message = "Password is required")
+    @Size(min = 6, message = "Password should be no less 6")
     @Column(name = "password")
     private String password;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "company_id")
     private Company company;
+
     @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "contacts_id")
     private Contacts contacts;
@@ -50,7 +62,7 @@ public class AppUser implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Collection<Role> roles = new ArrayList<>();
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

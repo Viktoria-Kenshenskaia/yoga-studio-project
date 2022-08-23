@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +22,8 @@ public class Company {
     @Column(name = "company_id")
     private long companyId;
 
+    @NotEmpty(message = "Please enter company name")
+    @Size(min = 1, max = 50, message = "Company name should be no less 1 and no more 50 signs")
     @Column(name = "company_name")
     private String companyName;
     @Column(name = "created_date", updatable = false)

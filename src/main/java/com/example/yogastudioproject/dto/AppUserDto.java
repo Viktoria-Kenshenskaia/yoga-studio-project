@@ -12,12 +12,10 @@ import java.util.Set;
 
 @Data
 public class AppUserDto implements Serializable {
-    private Long userId;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;
     @Email
     private String email;
-    private String password;
-    private Collection<RoleDto> roles;
+    private Set<RoleDto> roles;
 }

@@ -1,10 +1,13 @@
 package com.example.yogastudioproject.service;
 
-import com.example.yogastudioproject.domain.model.*;
+import com.example.yogastudioproject.domain.model.AppUser;
+import com.example.yogastudioproject.domain.model.Company;
+import com.example.yogastudioproject.domain.model.Contacts;
+import com.example.yogastudioproject.domain.model.Role;
+import com.example.yogastudioproject.domain.payload.request.SignupRequestEmployee;
 import com.example.yogastudioproject.domain.payload.request.SignupRequest;
 import com.example.yogastudioproject.domain.payload.request.SignupRequestCompany;
 import com.example.yogastudioproject.dto.AppUserDto;
-import com.example.yogastudioproject.dto.RoleDto;
 import com.example.yogastudioproject.repository.AppUserRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
@@ -31,17 +34,17 @@ public class AppUserService {
     private final ModelMapper modelMapper;
 
 
-    public AppUser createEmployee(AppUserDto appUserDto, Principal principal) {
-        AppUser appUser = userDtoToUser(appUserDto);
-        appUser.setPassword(passwordEncoder.encode(appUserDto.getPassword()));
-        appUser.setCompany(companyService.getCompanyByPrincipal(principal));
+//    public AppUser createEmployee(SignupRequestEmployee signupRequestEmployee,
+//                                  Principal principal) {
+//
+//        AppUser appUser = createUserFromSignupRequest(signupRequestEmployee, companyService.getCompanyByPrincipal(principal));
+//
+//        appUser.setLastname(signupRequestEmployee.getLastname());
+//        appUser.setDateOfBirth(signupRequestEmployee.getDateOfBirth());
+//
+//        return appUserRepo.save(appUser);
+//    }
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepo.findRoleByName("ROLE_MANAGER"));
-        appUser.setRoles(roles);
-
-        return appUserRepo.save(appUser);
-    }
 
 
 
@@ -51,44 +54,36 @@ public class AppUserService {
         return appUserRepo.save(appUser);
     }
 
-    private AppUser userDtoToUser(AppUserDto appUserDto) {
-        return modelMapper.map(appUserDto, AppUser.class);
-    }
+//    private AppUser createUserFromSignupRequest(SignupRequest signupRequest, Company company) {
+//        if (appUserRepo.findAppUserByEmail(signupRequest.getEmail()).isPresent()) {
+//            throw new RuntimeException("An account with this email already exists.");
+//        }
+//
+//        AppUser appUser = new AppUser();
+//        appUser.setCompany(company);
+//        appUser.setFirstname(signupRequest.getFirstname());
+//        appUser.setEmail(signupRequest.getEmail());
+//        appUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+//
+//        Contacts userContacts = new Contacts();
+//        userContacts.setCompany(company);
+//        appUser.setContacts(userContacts);
+//
+//        Set<Role> roles = new HashSet<>();
+//        signupRequest.getRoles().forEach(roleDto ->
+//                roles.add(roleRepo.findRoleByName(roleDto.getRoleName())));
+//        appUser.setRoles(roles);
+//
+//        return appUser;
+//    }
 
-    private AppUser createUserFromSignupRequest(SignupRequest signupRequest, Set<Role> roles) {
-        AppUser appUser = new AppUser();
-        appUser.setFirstname(signupRequest.getFirstname());
-        appUser.setEmail(signupRequest.getEmail());
-        appUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        roles.forEach(role -> appUser.getRoles().add(role));
-
-        return appUser;
-    }
-
-    public AppUser createEmployeeFromSignupRequest(SignupRequest signupRequest) {
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepo.findRoleByName("ROLE_MANAGER"));
-        AppUser appUser = createUserFromSignupRequest(signupRequest, roles);
-
-        return appUserRepo.save(appUser);
-    }
-
-    public AppUser createUserFromSignupRequestCompany(SignupRequestCompany signupRequestCompany) {
-        Company company = companyService.createCompany(signupRequestCompany.getCompanyName());
-
-        Contacts userContacts = new Contacts();
-        userContacts.setCompany(company);
-
-
-
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepo.findRoleByName("ROLE_ADMIN"));
-        AppUser appUser = createUserFromSignupRequest(signupRequestCompany, roles);
-        appUser.setContacts(userContacts);
-        appUser.setCompany(company);
-
-        return appUserRepo.save(appUser);
-    }
+//    public AppUser createUserFromSignupRequestCompany(SignupRequestCompany signupRequestCompany) {
+//
+//        Company company = companyService.createCompany(signupRequestCompany.getCompanyName());
+//        AppUser appUser = createUserFromSignupRequest(signupRequestCompany, company);
+//
+//        return appUserRepo.save(appUser);
+//    }
 
 
     public Role saveRole(Role role) {
