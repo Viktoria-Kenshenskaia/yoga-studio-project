@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/class")
@@ -60,14 +61,16 @@ public class OneClassController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<OneClass>> getAllClasses(Principal principal) {
-        return ResponseEntity.ok().body(classService.getAllClasses(principal));
+    public ResponseEntity<List<OneClassDto>> getAllClasses(Principal principal) {
+        return ResponseEntity.ok().body(classService.getAllClasses(principal)
+                .stream().map(oneClass -> modelMapper.map(oneClass, OneClassDto.class)).collect(Collectors.toList()));
     }
 
     @GetMapping("/all/{teacherId}")
-    public ResponseEntity<List<OneClass>> getAllClassesForTeacher(@PathVariable("teacherId") Long teacherId,
+    public ResponseEntity<List<OneClassDto>> getAllClassesForTeacher(@PathVariable("teacherId") Long teacherId,
                                                                   Principal principal) {
-        return ResponseEntity.ok().body(classService.getAllClassesForTeacher(teacherId, principal));
+        return ResponseEntity.ok().body(classService.getAllClassesForTeacher(teacherId, principal)
+                .stream().map(oneClass -> modelMapper.map(oneClass, OneClassDto.class)).collect(Collectors.toList()));
     }
 
     @GetMapping("/all/{from}&{to}")
