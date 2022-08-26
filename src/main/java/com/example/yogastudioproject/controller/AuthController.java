@@ -42,7 +42,7 @@ public class AuthController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> registrationUser(@Valid @RequestBody SignupRequestCompany signupRequestCompany,
+    public ResponseEntity<Object> registrationCompany(@Valid @RequestBody SignupRequestCompany signupRequestCompany,
                                                    BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;

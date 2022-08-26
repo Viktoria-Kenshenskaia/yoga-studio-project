@@ -2,11 +2,16 @@ package com.example.yogastudioproject.controller;
 
 import com.example.yogastudioproject.domain.model.OneClass;
 import com.example.yogastudioproject.domain.payload.request.ClassToSubscription;
+import com.example.yogastudioproject.domain.payload.response.MessageResponse;
+import com.example.yogastudioproject.domain.validation.ResponseErrorValidation;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.service.AppUserService;
 import com.example.yogastudioproject.service.OneClassService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -14,7 +19,6 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/class")
@@ -22,50 +26,83 @@ import java.util.Map;
 @RolesAllowed({"ROLE_ADMIN", "ROLE_MANAGER"})
 public class OneClassController {
     private final OneClassService classService;
-    private final AppUserService userService;
+    private final ModelMapper modelMapper;
+    private final ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/create")
-    public ResponseEntity<OneClass> createClass(@Valid @RequestBody OneClassDto classDto) {
-      return   ResponseEntity.ok().body(classService.createClass(classDto));
+    public ResponseEntity<Object> createClass(@Valid @RequestBody OneClassDto classDto,
+                                              BindingResult bindingResult,
+                                              Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        OneClass oneClass = modelMapper.map(classDto, OneClass.class);
+        return ResponseEntity.ok().body(classService.createClass(oneClass, principal));
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<OneClass> updateClass(@Valid @RequestBody Map<String, String> json) {
-        OneClassDto classDto = new OneClassDto(json.get("dateOfClass"), Long.parseLong(json.get("teacherId")));
+    @PostMapping("/{classId}/update")
+    public ResponseEntity<Object> updateClass(@Valid @RequestBody OneClassDto oneClassDto,
+                                                @PathVariable("classId") Long classId,
+                                                BindingResult bindingResult,
+                                                Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+        OneClass oneClass = classService.updateClass(modelMapper.map(oneClassDto, OneClass.class), classId, principal);
 
-        return   ResponseEntity.ok().body(classService.updateClass(classDto, Long.parseLong(json.get("classId"))));
+        return ResponseEntity.ok().body(modelMapper.map(oneClass, OneClassDto.class));
     }
 
-    @DeleteMapping("/delete")
-    public void deleteClass(@RequestBody Map<String, Long> json) {
-
-        classService.deleteClassById(json.get("classId"));
+    @DeleteMapping("/{classId}/delete")
+    public ResponseEntity<Object> deleteClass(@PathVariable("classId") Long classId, Principal principal) {
+        classService.deleteClass(classId, principal);
+        return ResponseEntity.ok().body(new MessageResponse("Class was deleted"));
     }
 
     @GetMapping("/all")
+    @RolesAllowed({"ROLE_TEACHER"})
     public ResponseEntity<List<OneClass>> getAllClasses(Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClasses(principal));
     }
 
-    @GetMapping("/all/{id}")
-    public ResponseEntity<List<OneClass>> getAllClassesForTeacher(@PathVariable("id") Long teacherId) {
-        return ResponseEntity.ok().body(classService.getAllClassesForTeacherById(teacherId));
+    @GetMapping("/all/{teacherId}")
+    @RolesAllowed({"ROLE_TEACHER"})
+    public ResponseEntity<List<OneClass>> getAllClassesForTeacher(@PathVariable("teacherId") Long teacherId,
+                                                                  Principal principal) {
+        return ResponseEntity.ok().body(classService.getAllClassesForTeacher(teacherId, principal));
     }
 
     @GetMapping("/all/{from}&{to}")
-    public ResponseEntity<List<OneClass>> getAllFromTo(@PathVariable("from") LocalDateTime from,
-                                                       @PathVariable("to") LocalDateTime to,
+    @RolesAllowed({"ROLE_TEACHER"})
+    public ResponseEntity<Object> getAllAfterAndBefore(@PathVariable("from") LocalDateTime classesAfter,
+                                                       @PathVariable("to") LocalDateTime classesBefore,
+                                                       BindingResult bindingResult,
                                                        Principal principal) {
-        return ResponseEntity.ok().body(classService.getAllClassesFromTo(principal, from, to));
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        return ResponseEntity.ok().body(classService.getAllClassesFromTo(principal, classesAfter, classesBefore));
     }
+
     @PostMapping("/add-to-class")
-    public void addClientToClass(@RequestBody ClassToSubscription classToSubscription) {
-        classService.addSubscriptionToClass(classToSubscription);
+    public ResponseEntity<Object> addCustomerToClass(@RequestBody ClassToSubscription classToSubscription,
+                                                     BindingResult bindingResult,
+                                                     Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        classService.addSubscriptionToClass(classToSubscription, principal);
+        return ResponseEntity.ok().body(new MessageResponse("Customer was added to subscription!"));
     }
 
     @PostMapping("/remove-from-class")
-    public void removeClientFromClass(@RequestBody ClassToSubscription classToSubscription) {
-        classService.removeSubscriptionFromClass(classToSubscription);
-    }
+    public ResponseEntity<Object> removeCustomerFromClass(@RequestBody ClassToSubscription classToSubscription,
+                                        BindingResult bindingResult,
+                                        Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
 
+        classService.removeSubscriptionFromClass(classToSubscription, principal);
+
+        return ResponseEntity.ok(new MessageResponse("Customer was removed from class!"));
+    }
 }

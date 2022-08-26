@@ -20,29 +20,20 @@ public class ClientService {
         return clientRepo.save(client);
     }
 
-    public Client updateClient(Client client, Principal principal) {
-        if (!isBelongCompany(client, principal)) {
-            throw new RuntimeException("Client not belong your company");
-        }
+    public Client updateClient(Client clientUpdate, Long clientId, Principal principal) {
+        Client clientOld = getClientById(clientId, principal);
 
-        client.setClientId(clientRepo.findIdByClientEmail(client.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        clientUpdate.setClientId(clientOld.getClientId());
 
-        return clientRepo.save(client);
+        return clientRepo.save(clientUpdate);
     }
 
-    public void deleteClient(Client client, Principal principal) {
-        if (!isBelongCompany(client, principal)) {
-            throw new RuntimeException("Client not belong your company");
-        }
-
-        client.setClientId(clientRepo.findIdByClientEmail(client.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found")));
-
+    public void deleteClient(Long clientId, Principal principal) {
+        Client client = getClientById(clientId, principal);
         clientRepo.delete(client);
     }
 
-    public Client getClient(Long clientId, Principal principal) {
+    public Client getClientById(Long clientId, Principal principal) {
         Client client = clientRepo.findById(clientId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         if (!isBelongCompany(client, principal)) {
@@ -50,11 +41,6 @@ public class ClientService {
         }
         return client;
 
-    }
-
-    public Client findClientById(Long clientId) {
-        return clientRepo.findById(clientId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     private boolean isBelongCompany(@NotNull Client client, Principal principal) {

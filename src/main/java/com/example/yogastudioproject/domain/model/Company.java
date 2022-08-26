@@ -30,31 +30,34 @@ public class Company {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "address_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", updatable = false)
     private Address address;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "contacts_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contacts_id", updatable = false)
     private Contacts contacts;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private Set<AppUser> employees = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "company")
     private Set<Subscription> subscriptions = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Set<Client> clients = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private Set<OneClass> classes = new HashSet<>();
 
     @PrePersist
     private void createDate() {
         this.createdDate = LocalDateTime.now();
     }
-
 
 
 }

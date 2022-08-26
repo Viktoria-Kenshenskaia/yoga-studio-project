@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Data
 public class SignupRequestEmployee extends SignupRequest{
     @Size(min = 1, max = 50, message = "Lastname should be no less 1 and no more 50 signs")
-    @Column(name = "lastname")
     private String lastname;
     private LocalDate dateOfBirth;
 }

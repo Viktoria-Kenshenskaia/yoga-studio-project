@@ -1,12 +1,15 @@
 package com.example.yogastudioproject.controller;
 
 import com.example.yogastudioproject.domain.model.Client;
+import com.example.yogastudioproject.domain.payload.response.MessageResponse;
+import com.example.yogastudioproject.domain.validation.ResponseErrorValidation;
 import com.example.yogastudioproject.dto.ClientDto;
 import com.example.yogastudioproject.service.ClientService;
-import com.example.yogastudioproject.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -20,36 +23,45 @@ import java.security.Principal;
 public class ClientController {
     private final ModelMapper modelMapper;
     private final ClientService clientService;
+    private final ResponseErrorValidation responseErrorValidation;
 
 
     @PostMapping("/create")
-    public ResponseEntity<ClientDto> createClient(@Valid @RequestBody ClientDto clientDto,
+    public ResponseEntity<Object> createClient(@Valid @RequestBody ClientDto clientDto,
+                                                  BindingResult bindingResult,
                                                   Principal principal) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
         Client client = clientService.createClient(modelMapper.map(clientDto, Client.class), principal);
         return ResponseEntity.ok().body(modelMapper.map(client, ClientDto.class));
     }
 
 
-    @GetMapping("/details")
-    public ResponseEntity<ClientDto> getClientDetails(@RequestBody Long clientId,
+    @GetMapping("/{clientId}/details")
+    public ResponseEntity<ClientDto> getClientDetails(@PathVariable("clientId") Long clientId,
                                                       Principal principal) {
-        Client client = clientService.getClient(clientId, principal);
-
+        Client client = clientService.getClientById(clientId, principal);
         return ResponseEntity.ok().body(modelMapper.map(client, ClientDto.class));
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<ClientDto> updateClient(@Valid @RequestBody ClientDto clientDto,
+    @PostMapping("/{clientId}/update")
+    public ResponseEntity<Object> updateClient(@Valid @RequestBody ClientDto clientDto,
+                                                  @PathVariable("clientId") Long clientId,
+                                                  BindingResult bindingResult,
                                                   Principal principal) {
-        Client client = clientService.updateClient(modelMapper.map(clientDto, Client.class), principal);
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        Client client = clientService.updateClient(modelMapper.map(clientDto, Client.class),clientId, principal);
         return ResponseEntity.ok().body(modelMapper.map(client, ClientDto.class));
     }
 
-    @DeleteMapping("/delete")
-    public void deleteClient(@RequestBody ClientDto clientDto,
-                             Principal principal) {
-        Client client = modelMapper.map(clientDto, Client.class);
-        clientService.deleteClient(client, principal);
+    @DeleteMapping("/{clientId}/delete")
+    public ResponseEntity<Object> deleteClient(@PathVariable("clientId") Long clientId,
+                                                        Principal principal) {
+        clientService.deleteClient(clientId, principal);
+        return ResponseEntity.ok(new MessageResponse("Client was deleted"));
     }
 
 

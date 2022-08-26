@@ -55,7 +55,7 @@ public class Client {
     private Set<Subscription> subscriptions;
 
     @ManyToOne
-    @JoinColumn(name = "studio_id")
+    @JoinColumn(name = "studio_id", updatable = false)
     private Company company;
 
     @PrePersist

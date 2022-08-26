@@ -1,5 +1,6 @@
 package com.example.yogastudioproject.service;
 
+import com.example.yogastudioproject.domain.exception.UserExistException;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Contacts;
@@ -28,7 +29,6 @@ public class AuthService {
     private final CompanyService companyService;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
 
     public AppUser createEmployee(SignupRequestEmployee signupRequestEmployee,
                                   Principal principal) {
@@ -51,7 +51,7 @@ public class AuthService {
 
     private AppUser createUserFromSignupRequest(SignupRequest signupRequest, Company company) {
         if (appUserRepo.findAppUserByEmail(signupRequest.getEmail()).isPresent()) {
-            throw new RuntimeException("An account with this email already exists.");
+            throw new UserExistException("An account with this email already exists.");
         }
 
         AppUser appUser = new AppUser();

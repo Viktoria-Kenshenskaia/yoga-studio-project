@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 public class ClientDto implements Serializable {
+    private long clientId;
     @Email
     private String email;
     @Size(min = 2, max = 30, message = "Firstname should not be less than 2 and not greater than 30 signs")

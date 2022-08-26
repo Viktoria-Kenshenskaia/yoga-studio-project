@@ -1,14 +1,15 @@
 package com.example.yogastudioproject.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
 public class ContactsDto implements Serializable {
-    private final long contactsId;
-    private final String email;
-    private final String phoneNumber;
-    private final String instagram;
-    private final String telegram;
+    private  long contactsId;
+    private  String phoneNumber;
+    private  String instagram;
+    private  String telegram;
 }

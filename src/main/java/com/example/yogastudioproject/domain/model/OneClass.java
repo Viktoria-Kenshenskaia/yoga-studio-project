@@ -29,7 +29,7 @@ public class OneClass {
     @JoinColumn(name = "teacher_user_id")
     private AppUser teacher;
     @ManyToOne
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", updatable = false)
     private Company company;
 
     @ManyToMany

@@ -4,31 +4,44 @@ import com.example.yogastudioproject.domain.model.Address;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
 import com.example.yogastudioproject.domain.model.Contacts;
-import com.example.yogastudioproject.dto.CompanyDto;
+import com.example.yogastudioproject.repository.AddressRepo;
 import com.example.yogastudioproject.repository.AppUserRepo;
 import com.example.yogastudioproject.repository.CompanyRepo;
+import com.example.yogastudioproject.repository.ContactsRepo;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompanyService {
     private final CompanyRepo companyRepo;
     private final AppUserRepo appUserRepo;
+    private final AddressRepo addressRepo;
+    private final ContactsRepo contactsRepo;
 
-    public Company updateCompany(Company companyUpdate, Principal principal) {
+    @Transactional
+    public Company updateCompany(Company companyUpdate,
+                                 Contacts contactsUpdate,
+                                 Address addressUpdate,
+                                 Principal principal) {
+
         Company company = getCompanyByPrincipal(principal);
         companyUpdate.setCompanyId(company.getCompanyId());
+        contactsUpdate.setContactsId(company.getContacts().getContactsId());
+        addressUpdate.setAddressId(company.getAddress().getAddressId());
+
+        contactsRepo.save(contactsUpdate);
+        addressRepo.save(addressUpdate);
         return companyRepo.save(companyUpdate);
     }
-
-    public void deleteCompany(Principal principal) {
-        companyRepo.delete(getCompanyByPrincipal(principal));
+    @Transactional
+    public void deleteCompany(Principal principal) {                                    //////
+        Company company = getCompanyByPrincipal(principal);
+        companyRepo.delete(company);
     }
     public Company getCompanyByPrincipal(Principal principal) {
         AppUser appUser = appUserRepo.findAppUserByEmail(principal.getName())

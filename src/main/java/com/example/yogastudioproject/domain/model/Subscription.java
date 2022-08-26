@@ -23,7 +23,7 @@ public class Subscription {
     @Column(name = "subscription_id")
     private long subscriptionId;
     @ManyToOne
-    @JoinColumn(name = "company_company_id")
+    @JoinColumn(name = "company_company_id", updatable = false)
     private Company company;
 
     @Column(name = "opened_at")
@@ -47,7 +47,7 @@ public class Subscription {
     private int price;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", updatable = false)
     private Client client;
 
     public int getNumberOfClasses() {

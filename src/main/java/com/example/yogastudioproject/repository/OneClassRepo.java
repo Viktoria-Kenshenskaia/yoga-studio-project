@@ -15,5 +15,5 @@ public interface OneClassRepo extends JpaRepository<OneClass, Long> {
     List<OneClass> findAllByCompany(Company company);
     List<OneClass> findAllByTeacher(AppUser teacher);
 
-    List<OneClass> findAllByCompanyAndDateOfClassBeforeAndDateOfClassAfter(Company company, LocalDateTime dateOfClass, LocalDateTime dateOfClass2);
+    List<OneClass> findAllByCompanyAndDateOfClassAfterAndDateOfClassBefore(Company company, LocalDateTime classesAfter, LocalDateTime ClassesBefore);
 }

@@ -35,13 +35,14 @@ public class AppUser implements UserDetails {
     @Size(min = 1, max = 50, message = "Lastname should be no less 1 and no more 50 signs")
     @Column(name = "lastname")
     private String lastname;
+
     @Column(name = "date_of_birth")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Email
     @NotBlank(message = "Email is required")
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, updatable = false)
     private String email;
 
     @NotEmpty(message = "Password is required")
@@ -50,11 +51,11 @@ public class AppUser implements UserDetails {
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", updatable = false)
     private Company company;
 
     @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "contacts_id")
+    @JoinColumn(name = "contacts_id", updatable = false)
     private Contacts contacts;
 
     @ManyToMany(fetch = FetchType.EAGER)
