@@ -60,13 +60,11 @@ public class OneClassController {
     }
 
     @GetMapping("/all")
-    @RolesAllowed({"ROLE_TEACHER"})
     public ResponseEntity<List<OneClass>> getAllClasses(Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClasses(principal));
     }
 
     @GetMapping("/all/{teacherId}")
-    @RolesAllowed({"ROLE_TEACHER"})
     public ResponseEntity<List<OneClass>> getAllClassesForTeacher(@PathVariable("teacherId") Long teacherId,
                                                                   Principal principal) {
         return ResponseEntity.ok().body(classService.getAllClassesForTeacher(teacherId, principal));

@@ -41,12 +41,12 @@ public class OneClassService {
     }
 
     public OneClass updateClass(OneClassDto oneClassUpdate, Long classId, Principal principal) {
-        OneClass oneCLassOld = oneClassRepo.findById(classId).orElseThrow(() -> new RuntimeException("Class not found"));
-        if (!isBelongCompany(oneCLassOld, principal))
+        OneClass oneClassOld = oneClassRepo.findById(classId).orElseThrow(() -> new RuntimeException("Class not found"));
+        if (!isBelongCompany(oneClassOld, principal))
             throw new RuntimeException("This class cannot be updated!");
         OneClass oneClass = new OneClass();
 
-        oneClass.setClassId(oneClass.getClassId());
+        oneClass.setClassId(oneClassOld.getClassId());
         oneClass.setDateOfClass(LocalDateTime.parse(oneClassUpdate.getDateOfClass(), dateTimeFormatter));
         oneClass.setTeacher(appUserService.getAppUserById(oneClassUpdate.getTeacher().getUserId(), principal));
 
