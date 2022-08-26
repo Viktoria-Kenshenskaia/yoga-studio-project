@@ -25,7 +25,7 @@ public class OneClass {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateOfClass;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_user_id")
     private AppUser teacher;
     @ManyToOne

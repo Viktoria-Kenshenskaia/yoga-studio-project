@@ -59,4 +59,13 @@ public class EmployeeController {
                 .map(user -> modelMapper.map(user, AppUserDto.class)).collect(Collectors.toList()));
     }
 
+    @GetMapping("/teachers")
+    public ResponseEntity<List<AppUserDto>> getAllTeachers(Principal principal) {
+        List<AppUser> teachers = userService.getAllTeachers(principal);
+
+        return ResponseEntity.ok().body(teachers.stream()
+                .map(user -> modelMapper.map(user, AppUserDto.class)).collect(Collectors.toList()));
+    }
+
+
 }

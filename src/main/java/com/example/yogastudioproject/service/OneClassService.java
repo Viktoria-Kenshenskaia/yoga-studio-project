@@ -2,14 +2,17 @@ package com.example.yogastudioproject.service;
 
 import com.example.yogastudioproject.domain.model.*;
 import com.example.yogastudioproject.domain.payload.request.ClassToSubscription;
+import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.repository.OneClassRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -21,25 +24,34 @@ public class OneClassService {
     private final AppUserService appUserService;
     private final CompanyService companyService;
     private final SubscriptionService subscriptionService;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public OneClass createClass(OneClass oneClass, Principal principal) {
-        AppUser appUser = appUserService.getAppUserById(oneClass.getTeacher().getUserId(), principal);
+    public OneClass createClass(OneClassDto oneClassDto, Long teacherId, Principal principal) {
+        AppUser appUser = appUserService.getAppUserById(teacherId, principal);
         Role role = roleRepo.findRoleByName("ROLE_TEACHER");
         if (!appUser.getRoles().contains(role))
             throw new RuntimeException("This user cannot be a teacher!");
 
+        OneClass oneClass = new OneClass();
+        oneClass.setDateOfClass(LocalDateTime.parse(oneClassDto.getDateOfClass(), dateTimeFormatter));
+        oneClass.setTeacher(appUser);
         oneClass.setCompany(companyService.getCompanyByPrincipal(principal));
+
         return oneClassRepo.save(oneClass);
     }
 
-    public OneClass updateClass(OneClass oneClassUpdate, Long classId, Principal principal) {
+    public OneClass updateClass(OneClassDto oneClassUpdate, Long classId, Principal principal) {
         OneClass oneCLassOld = oneClassRepo.findById(classId).orElseThrow(() -> new RuntimeException("Class not found"));
         if (!isBelongCompany(oneCLassOld, principal))
             throw new RuntimeException("This class cannot be updated!");
+        OneClass oneClass = new OneClass();
 
-        oneClassUpdate.setClassId(classId);
+        oneClass.setClassId(oneClass.getClassId());
+        oneClass.setDateOfClass(LocalDateTime.parse(oneClassUpdate.getDateOfClass(), dateTimeFormatter));
+        oneClass.setTeacher(appUserService.getAppUserById(oneClassUpdate.getTeacher().getUserId(), principal));
 
-        return oneClassRepo.save(oneClassUpdate);
+
+        return oneClassRepo.save(oneClass);
     }
 
     public void deleteClass(Long classId, Principal principal) {

@@ -64,16 +64,6 @@ public class AppUserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public List<AppUserDto> getAllEmployee(Principal principal) {
-        Company company = companyService.getCompanyByPrincipal(principal);
-        List<AppUserDto> users = appUserRepo.findAllByCompany(company)
-                .stream().map(user -> modelMapper.map(user, AppUserDto.class))
-                .collect(Collectors.toList());
-
-
-        return users;
-    }
-
     public AppUser getAppUserById(Long userId, Principal principal) {
         AppUser appUser = appUserRepo.findById(userId).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
@@ -121,5 +111,14 @@ public class AppUserService {
 
     public boolean isBelongCompany(AppUser appUser, Principal principal) {
         return appUser.getCompany().equals(companyService.getCompanyByPrincipal(principal));
+    }
+
+    public List<AppUser> getAllTeachers(Principal principal) {
+        Role role = roleRepo.findRoleByName("ROLE_TEACHER");
+        Company company = companyService.getCompanyByPrincipal(principal);
+        List<AppUser> users = appUserRepo.findAllByCompany(company)
+                .stream().filter(user -> user.getRoles().contains(role)).collect(Collectors.toList());
+
+        return users;
     }
 }

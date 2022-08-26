@@ -29,25 +29,26 @@ public class OneClassController {
     private final ModelMapper modelMapper;
     private final ResponseErrorValidation responseErrorValidation;
 
-    @PostMapping("/create")
+    @PostMapping("/{teacherId}/create")
     public ResponseEntity<Object> createClass(@Valid @RequestBody OneClassDto classDto,
+                                              @PathVariable("teacherId") Long teacherId,
                                               BindingResult bindingResult,
                                               Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        OneClass oneClass = modelMapper.map(classDto, OneClass.class);
-        return ResponseEntity.ok().body(classService.createClass(oneClass, principal));
+        classService.createClass(classDto, teacherId, principal);
+        return ResponseEntity.ok(new MessageResponse("Class was created"));
     }
 
-    @PostMapping("/{classId}/update")
+    @PatchMapping("/{classId}/update")
     public ResponseEntity<Object> updateClass(@Valid @RequestBody OneClassDto oneClassDto,
-                                                @PathVariable("classId") Long classId,
-                                                BindingResult bindingResult,
-                                                Principal principal) {
+                                              @PathVariable("classId") Long classId,
+                                              BindingResult bindingResult,
+                                              Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
-        OneClass oneClass = classService.updateClass(modelMapper.map(oneClassDto, OneClass.class), classId, principal);
+        OneClass oneClass = classService.updateClass(oneClassDto, classId, principal);
 
         return ResponseEntity.ok().body(modelMapper.map(oneClass, OneClassDto.class));
     }
@@ -83,6 +84,14 @@ public class OneClassController {
         return ResponseEntity.ok().body(classService.getAllClassesFromTo(principal, classesAfter, classesBefore));
     }
 
+    @GetMapping("/{classId}/details")
+//    @RolesAllowed({"ROLE_TEACHER"})
+    public ResponseEntity<Object> getClassDetails(@PathVariable("classId") Long classId,
+                                                  Principal principal) {
+        OneClass oneClass = classService.getOneClassById(classId, principal);
+        return ResponseEntity.ok().body(modelMapper.map(oneClass, OneClassDto.class));
+    }
+
     @PostMapping("/add-to-class")
     public ResponseEntity<Object> addCustomerToClass(@RequestBody ClassToSubscription classToSubscription,
                                                      BindingResult bindingResult,
@@ -96,8 +105,8 @@ public class OneClassController {
 
     @PostMapping("/remove-from-class")
     public ResponseEntity<Object> removeCustomerFromClass(@RequestBody ClassToSubscription classToSubscription,
-                                        BindingResult bindingResult,
-                                        Principal principal) {
+                                                          BindingResult bindingResult,
+                                                          Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
