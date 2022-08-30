@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,7 +28,6 @@ public class Client {
 
     @Email
     @Column(name = "email", unique = true)
-    @UniqueElements
     private String email;
 
     @Column(name = "firstname")
@@ -52,7 +52,7 @@ public class Client {
 //    @PhoneNumber
     private String phoneNumber;
     @OneToMany(mappedBy = "client")
-    private Set<Subscription> subscriptions;
+    private List<Subscription> subscriptions;
 
     @ManyToOne
     @JoinColumn(name = "studio_id", updatable = false)

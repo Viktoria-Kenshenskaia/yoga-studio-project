@@ -1,5 +1,6 @@
 package com.example.yogastudioproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -17,6 +18,7 @@ public class ClientDto implements Serializable {
     private String firstname;
     @Size(min = 2, max = 30, message = "Lastname should not be less than 2 and not greater than 30 signs")
     private String lastname;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     @NotNull
     private String phoneNumber;

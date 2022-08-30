@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -36,23 +37,25 @@ public class Subscription {
     private LocalDate finishedAt;
 
     @Column(name = "number_of_classes")
-    @Size(min = 0, max = 1000, message = "Number of classes should not be less than 0 and not greater than 1000")
-    private int numberOfClasses;
+//    @Size(min = 0, max = 1000, message = "Number of classes should not be less than 0 and not greater than 1000")
+    @Min(0)
+    @Max(1000)
+    private Integer numberOfClasses;
 
     @ManyToMany(mappedBy = "subscription")
-    private Set<OneClass> visitedClasses = new HashSet<>();
+    private List<OneClass> visitedClasses;
 
     @Column(name = "price")
     @Min(value = 0)
-    private int price;
+    private Integer price;
 
     @ManyToOne
     @JoinColumn(name = "client_id", updatable = false)
     private Client client;
 
-    public int getNumberOfClasses() {
-        return numberOfClasses - visitedClasses.size();
-    }
+//    public int getNumberOfClasses() {
+//        return numberOfClasses - visitedClasses.size();
+//    }
 
 
 }

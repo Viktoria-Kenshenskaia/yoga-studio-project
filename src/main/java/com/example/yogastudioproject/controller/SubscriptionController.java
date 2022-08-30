@@ -47,7 +47,7 @@ public class SubscriptionController {
         return ResponseEntity.ok().body(modelMapper.map(subscription, SubscriptionDto.class));
     }
 
-    @DeleteMapping("/{subscriptionId}/details")
+    @DeleteMapping("/{subscriptionId}/delete")
     public ResponseEntity<Object> deleteSubscription(@PathVariable("subscriptionId") Long subscriptionId,
                                                      Principal principal) {
         subscriptionService.deleteSubscription(subscriptionId, principal);

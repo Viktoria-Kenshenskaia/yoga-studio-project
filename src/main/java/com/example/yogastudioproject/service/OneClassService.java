@@ -5,6 +5,7 @@ import com.example.yogastudioproject.domain.payload.request.ClassToSubscription;
 import com.example.yogastudioproject.dto.OneClassDto;
 import com.example.yogastudioproject.repository.OneClassRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
+import com.example.yogastudioproject.repository.SubscriptionRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class OneClassService {
     private final AppUserService appUserService;
     private final CompanyService companyService;
     private final SubscriptionService subscriptionService;
+    private final SubscriptionRepo subscriptionRepo;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public OneClass createClass(OneClassDto oneClassDto, Long teacherId, Principal principal) {
@@ -81,7 +83,7 @@ public class OneClassService {
     public OneClass getOneClassById(Long classId, Principal principal) {
         OneClass oneClass = oneClassRepo.findById(classId).orElseThrow(() -> new RuntimeException("Class not found"));
         if (!isBelongCompany(oneClass, principal))
-            throw new RuntimeException("This class cannot be deleted!");
+            throw new RuntimeException("");
 
         return oneClass;
     }
@@ -93,9 +95,11 @@ public class OneClassService {
         if (!subscriptionService.isActive(subscription)) {
             throw  new RuntimeException("Subscription is not active");
         };
+
         oneClass.getSubscription().add(subscription);
         subscription.getVisitedClasses().add(oneClass);
 
+        subscriptionRepo.save(subscription);
         oneClassRepo.save(oneClass);
     }
 

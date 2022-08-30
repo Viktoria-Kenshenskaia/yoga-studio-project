@@ -104,7 +104,7 @@ public class OneClassController {
         return ResponseEntity.ok().body(new MessageResponse("Customer was added to subscription!"));
     }
 
-    @PostMapping("/remove-from-class")
+    @DeleteMapping("/remove-from-class")
     public ResponseEntity<Object> removeCustomerFromClass(@RequestBody ClassToSubscription classToSubscription,
                                                           BindingResult bindingResult,
                                                           Principal principal) {

@@ -45,7 +45,7 @@ public class ClientController {
         return ResponseEntity.ok().body(modelMapper.map(client, ClientDto.class));
     }
 
-    @PostMapping("/{clientId}/update")
+    @PatchMapping("/{clientId}/update")
     public ResponseEntity<Object> updateClient(@Valid @RequestBody ClientDto clientDto,
                                                   @PathVariable("clientId") Long clientId,
                                                   BindingResult bindingResult,

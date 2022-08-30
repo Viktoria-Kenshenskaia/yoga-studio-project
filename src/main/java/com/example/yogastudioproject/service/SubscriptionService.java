@@ -41,7 +41,7 @@ public class SubscriptionService {
         LocalDate now = LocalDate.now(Clock.systemDefaultZone());
         return now.isAfter(subscription.getOpenedAt()) &&
                 now.isBefore(subscription.getFinishedAt()) &&
-                subscription.getNumberOfClasses() > 0;
+                (subscription.getNumberOfClasses() - subscription.getVisitedClasses().size()) > 0;
     }
 
 

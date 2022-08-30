@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -38,6 +39,6 @@ public class OneClass {
             joinColumns = @JoinColumn(name = "class_id"),
             inverseJoinColumns = @JoinColumn(name = "subscription_id")
     )
-    private Set<Subscription> subscription = new HashSet<>();
+    private List<Subscription> subscription;
 
 }
