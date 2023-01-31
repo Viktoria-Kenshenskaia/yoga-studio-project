@@ -2,12 +2,9 @@ package com.example.yogastudioproject.service;
 
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
-import com.example.yogastudioproject.domain.model.Contacts;
 import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.domain.payload.response.MessageResponse;
-import com.example.yogastudioproject.dto.AppUserDto;
 import com.example.yogastudioproject.repository.AppUserRepo;
-import com.example.yogastudioproject.repository.ContactsRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

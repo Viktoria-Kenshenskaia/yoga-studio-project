@@ -30,14 +30,6 @@ public class Company {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", updatable = false)
-    private Address address;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contacts_id", updatable = false)
-    private Contacts contacts;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private Set<AppUser> employees = new HashSet<>();
 

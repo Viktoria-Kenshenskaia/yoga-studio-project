@@ -3,7 +3,6 @@ package com.example.yogastudioproject.service;
 import com.example.yogastudioproject.domain.exception.UserExistException;
 import com.example.yogastudioproject.domain.model.AppUser;
 import com.example.yogastudioproject.domain.model.Company;
-import com.example.yogastudioproject.domain.model.Contacts;
 import com.example.yogastudioproject.domain.model.Role;
 import com.example.yogastudioproject.domain.payload.request.SignupRequest;
 import com.example.yogastudioproject.domain.payload.request.SignupRequestCompany;
@@ -11,7 +10,6 @@ import com.example.yogastudioproject.domain.payload.request.SignupRequestEmploye
 import com.example.yogastudioproject.repository.AppUserRepo;
 import com.example.yogastudioproject.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,10 +57,6 @@ public class AuthService {
         appUser.setFirstname(signupRequest.getFirstname());
         appUser.setEmail(signupRequest.getEmail());
         appUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-
-        Contacts userContacts = new Contacts();
-        userContacts.setCompany(company);
-        appUser.setContacts(userContacts);
 
         Set<Role> roles = new HashSet<>();
         signupRequest.getRoles().forEach(roleDto ->
