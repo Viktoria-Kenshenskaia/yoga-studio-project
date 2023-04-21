@@ -11,27 +11,58 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
 
+/**
+ * This class represents a REST controller for managing company-related requests.
+ */
 @RestController
-@RequestMapping("/api/company")
+@RequestMapping("/company")
 @RequiredArgsConstructor
 public class CompanyController {
+
+    /**
+     * The service for managing companies.
+     */
     private final CompanyService companyService;
+    /**
+     * The mapper for converting between objects.
+     */
     private final ModelMapper modelMapper;
+    /**
+     * The validator for handling validation errors.
+     */
     private final ResponseErrorValidation responseErrorValidation;
 
-
+    /**
+     * Retrieves details for the currently authenticated company.
+     *
+     * @param principal the authenticated principal
+     * @return a ResponseEntity containing the details of the company as a CompanyDto
+     */
     @GetMapping("/details")
     public ResponseEntity<CompanyDto> detailsCompany(Principal principal) {
         Company company = companyService.getCompanyByPrincipal(principal);
         return ResponseEntity.ok().body(modelMapper.map(company, CompanyDto.class));
     }
 
-    @PatchMapping("/update")
+    /**
+     * Updates the details for the currently authenticated company.
+     *
+     * @param updateCompanyRequest the request containing the updated details
+     * @param bindingResult        the result of the validation process
+     * @param principal            the authenticated principal
+     * @return a ResponseEntity containing the updated details of the company as a CompanyDto
+     */
+    @PutMapping
     @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<Object> updateCompany(@RequestBody UpdateCompanyRequest updateCompanyRequest,
                                                 BindingResult bindingResult,
@@ -44,7 +75,13 @@ public class CompanyController {
         return ResponseEntity.ok().body(modelMapper.map(company, CompanyDto.class));
     }
 
-    @DeleteMapping("/delete")
+    /**
+     * Deletes the currently authenticated company.
+     *
+     * @param principal the authenticated principal
+     * @return a ResponseEntity containing a message indicating that the company was deleted
+     */
+    @DeleteMapping
     @RolesAllowed({"ROLE_ADMIN"})
     public ResponseEntity<Object> deleteCompany(Principal principal) {
         companyService.deleteCompany(principal);

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/class")
+@RequestMapping("/classes")
 @RequiredArgsConstructor
 @RolesAllowed({"ROLE_ADMIN", "ROLE_MANAGER"})
 public class OneClassController {
@@ -30,7 +30,7 @@ public class OneClassController {
     private final ModelMapper modelMapper;
     private final ResponseErrorValidation responseErrorValidation;
 
-    @PostMapping("/{teacherId}/create")
+    @PostMapping("/{teacherId}")
     public ResponseEntity<Object> createClass(@Valid @RequestBody OneClassDto classDto,
                                               @PathVariable("teacherId") Long teacherId,
                                               BindingResult bindingResult,
@@ -42,7 +42,7 @@ public class OneClassController {
         return ResponseEntity.ok(new MessageResponse("Class was created"));
     }
 
-    @PatchMapping("/{classId}/update")
+    @PutMapping("/{classId}")
     public ResponseEntity<Object> updateClass(@Valid @RequestBody OneClassDto oneClassDto,
                                               @PathVariable("classId") Long classId,
                                               BindingResult bindingResult,
@@ -54,7 +54,7 @@ public class OneClassController {
         return ResponseEntity.ok().body(modelMapper.map(oneClass, OneClassDto.class));
     }
 
-    @DeleteMapping("/{classId}/delete")
+    @DeleteMapping("/{classId}")
     public ResponseEntity<Object> deleteClass(@PathVariable("classId") Long classId, Principal principal) {
         classService.deleteClass(classId, principal);
         return ResponseEntity.ok().body(new MessageResponse("Class was deleted"));
@@ -86,7 +86,6 @@ public class OneClassController {
     }
 
     @GetMapping("/{classId}/details")
-//    @RolesAllowed({"ROLE_TEACHER"})
     public ResponseEntity<Object> getClassDetails(@PathVariable("classId") Long classId,
                                                   Principal principal) {
         OneClass oneClass = classService.getOneClassById(classId, principal);

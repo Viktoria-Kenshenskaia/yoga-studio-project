@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -53,10 +53,6 @@ public class AppUser implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "company_id", updatable = false)
     private Company company;
-
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "contacts_id", updatable = false)
-    private Contacts contacts;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

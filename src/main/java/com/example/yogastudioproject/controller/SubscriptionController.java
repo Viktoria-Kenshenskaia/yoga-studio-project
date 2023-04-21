@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/subscription")
+@RequestMapping("/subscription")
 @RequiredArgsConstructor
 @RolesAllowed({"ROLE_ADMIN", "ROLE_MANAGER"})
 public class SubscriptionController {
@@ -26,7 +26,7 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
     private final ResponseErrorValidation responseErrorValidation;
 
-    @PostMapping("/{clientId}/create")
+    @PostMapping("/{clientId}")
     public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto,
                                                      @PathVariable("clientId") Long clientId,
                                                      BindingResult bindingResult,
@@ -39,7 +39,7 @@ public class SubscriptionController {
         return ResponseEntity.ok().body(modelMapper.map(subscription, SubscriptionDto.class));
     }
 
-    @GetMapping("/{subscriptionId}/details")
+    @GetMapping("/{subscriptionId}")
     public ResponseEntity<SubscriptionDto> getSubscriptionDetails(@PathVariable("subscriptionId") Long subscriptionId,
                                                                   Principal principal) {
         Subscription subscription = subscriptionService.getSubscriptionById(subscriptionId, principal);
@@ -47,7 +47,7 @@ public class SubscriptionController {
         return ResponseEntity.ok().body(modelMapper.map(subscription, SubscriptionDto.class));
     }
 
-    @DeleteMapping("/{subscriptionId}/delete")
+    @DeleteMapping("/{subscriptionId}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable("subscriptionId") Long subscriptionId,
                                                      Principal principal) {
         subscriptionService.deleteSubscription(subscriptionId, principal);

@@ -27,10 +27,9 @@ public class AppUserService {
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final ContactsRepo contactsRepo;
 
     @Transactional
-    public AppUser createUser(AppUser appUser) {                                    // FOR TEST
+    public AppUser createUser(AppUser appUser) {
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
 
         return appUserRepo.save(appUser);
@@ -88,11 +87,6 @@ public class AppUserService {
 
         if (!isBelongCompany(appUserOld, principal))
             throw new RuntimeException("This user cannot be updated!");
-
-        Contacts contacts = modelMapper.map(appUserUpdate.getContacts(), Contacts.class);
-        Contacts contactsOld = contactsRepo.findById(appUserOld.getContacts().getContactsId()).orElseThrow(() -> new RuntimeException("contacts not found"));
-        contacts.setContactsId(contactsOld.getContactsId());
-        contactsRepo.save(contacts);
 
         appUserUpdate.setUserId(userId);
         appUserUpdate.setEmail(appUserOld.getEmail());

@@ -31,19 +31,49 @@ import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    /**
+     * Generates a JWT token for the user.
+     */
     private final JWTUtil jwtUtil;
+
+    /**
+     * Provides services for working with users.
+     */
     private final AppUserService userService;
+
+    /**
+     * Provides services for user authentication.
+     */
     private final AuthService authService;
+
+    /**
+     * Manages authentication for Spring Security.
+     */
     private final AuthenticationManager authenticationManager;
+
+    /**
+     * Validates the response errors.
+     */
     private final ResponseErrorValidation responseErrorValidation;
+
+    /**
+     * Maps objects from one type to another.
+     */
     private final ModelMapper modelMapper;
 
+    /**
+     * Registers a company.
+     *
+     * @param signupRequestCompany the request containing the information to register the company
+     * @param bindingResult        the result of the validation performed on the request
+     * @return a ResponseEntity containing either an error response or a success message
+     */
     @PostMapping("/signup")
     public ResponseEntity<Object> registrationCompany(@Valid @RequestBody SignupRequestCompany signupRequestCompany,
-                                                   BindingResult bindingResult) {
+                                                      BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
@@ -52,11 +82,19 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Account registered successfully!"));
     }
 
+    /**
+     * Registers an employee.
+     *
+     * @param signupRequestEmployee the request containing the information to register the employee
+     * @param principal             the principal of the currently authenticated user
+     * @param bindingResult         the result of the validation performed on the request
+     * @return a ResponseEntity containing either an error response or a success message
+     */
     @RolesAllowed("ROLE_ADMIN")
     @PostMapping("/signup/employee")
     public ResponseEntity<Object> registrationEmployee(@Valid @RequestBody SignupRequestEmployee signupRequestEmployee,
-                                                        Principal principal,
-                                                        BindingResult bindingResult) {
+                                                       Principal principal,
+                                                       BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
@@ -65,6 +103,13 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Employee registered successfully!"));
     }
 
+    /**
+     * Authenticates a user with the given credentials.
+     *
+     * @param loginRequest  the request object containing the user's email and password
+     * @param bindingResult the result of the request validation
+     * @return a ResponseEntity containing either an error message or a success message with the user's JWT and details
+     */
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,
                                                    BindingResult bindingResult) {
